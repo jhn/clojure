@@ -455,15 +455,18 @@
             (aget [_ ~garr i#] (aget ~tgarr i#))
             (aset [_ ~garr i# val#] (aset ~tgarr i# (~t val#))))))
 
-(def ^{:private true} ams
-     {:int (mk-am int)
-      :long (mk-am long)
-      :float (mk-am float)
-      :double (mk-am double)
-      :byte (mk-am byte)
-      :short (mk-am short)
-      :char (mk-am char)
-      :boolean (mk-am boolean)})
+(defn ^:private ams [t]
+  (let [s {:int (mk-am int)
+           :long (mk-am long)
+           :float (mk-am float)
+           :double (mk-am double)
+           :byte (mk-am byte)
+           :short (mk-am short)
+           :char (mk-am char)
+           :boolean (mk-am boolean)}]
+    (if-let [[t am] (find s t)]
+      am
+      (throw (IllegalArgumentException. (str "Unrecognized type " t))))))
 
 (defn vector-of 
   "Creates a new vector of a single primitive type t, where t is one
